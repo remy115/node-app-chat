@@ -12,8 +12,19 @@ var io=socketIO(server);
 io.on('connect',(socket)=>{
     console.log('New user connected!');
 
+    socket.emit('newMessage',{
+        from:'user01@email.com',
+        text:'Hi there!',
+        createdAt:213232482
+    });
+
     socket.on('disconnect',()=>{
         console.log('Client has disconnected!');
+    });
+
+    socket.on('createMessage',(data)=>{
+        data.createdAt=new Date().getTime();
+        console.log('createMessage',data);
     });
 
 });
