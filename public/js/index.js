@@ -6,7 +6,7 @@ function f1() {
 
 socket22.on('connect',()=>{
     console.log('Connected to the server!');
-    f1();
+    // f1();
 });
 
 

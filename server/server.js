@@ -5,6 +5,8 @@ const socketIO=require('socket.io');
 const port=process.env.PORT || 3000;
 const express=require('express');
 
+const {messageGenerator}=require('./utils/message.js');
+
 var app=express();
 const server=http.createServer(app);
 var io=socketIO(server);
@@ -13,29 +15,16 @@ io.on('connect',(socket)=>{
     console.log('New user connected!');
 
 
-    socket.emit('newMessage',{
-        from:'Admin',
-        text:'Welcome to the chat app!',
-        createdAt:new Date().getTime()
-    });
-    socket.broadcast.emit('newMessage',{
-        from:'Admin',
-        text:'New user joined',
-        createdAt:new Date().getTime()
-    });
+    socket.emit('newMessage',messageGenerator('Admin','Welcome to the chat app!'));
+    socket.broadcast.emit('newMessage',messageGenerator('Admin','New user joined'));
 
     socket.on('disconnect',()=>{
         console.log('Client has disconnected!');
     });
 
     socket.on('createMessage',(data)=>{
-        data.createdAt=new Date().getTime();
         console.log('createMessage',data);
-        io.emit('newMessage',{
-            to:data.to,
-            text:data.text,
-            createdAt:data.createdAt
-        });
+        io.emit('newMessage',messageGenerator(data.from,data.text));
     });
 
 });
