@@ -14,7 +14,7 @@ io.on('connect',(socket)=>{
 
     socket.emit('newMessage',{
         from:'user01@email.com',
-        text:'Hi there!',
+        text:'Hi there! created on the server!',
         createdAt:213232482
     });
 
@@ -25,6 +25,11 @@ io.on('connect',(socket)=>{
     socket.on('createMessage',(data)=>{
         data.createdAt=new Date().getTime();
         console.log('createMessage',data);
+        io.emit('newMessage',{
+            to:data.to,
+            text:data.text,
+            createdAt:data.createdAt
+        });
     });
 
 });

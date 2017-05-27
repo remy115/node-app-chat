@@ -1,10 +1,7 @@
 var socket22=io();
 
 function f1() {
-    socket22.emit('createMessage',{
-        to:'user02',
-        text:'Hi too!'
-    });
+
 } // f1
 
 socket22.on('connect',()=>{
