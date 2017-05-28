@@ -4,6 +4,7 @@ function emitMessage(from,text) {
     var objMsg={from,text};
     socket22.emit('createMessage',objMsg,function(data) {
         console.log('Acknoledgment from server: ',data);
+        $('#message').val('');
     });
 } // f1
 
@@ -56,14 +57,18 @@ locationButton.on('click',function(evt) {
     if( ! navigator.geolocation) {
         return alert('Geolocation not support by your browser!');
     }
+    var originalText=locationButton.text();
+    locationButton.prop('disabled',true).text('Sending location...');
 
     navigator.geolocation.getCurrentPosition(function(position) {
+        locationButton.prop('disabled',false).text(originalText);
         console.log(position);
         socket22.emit('createLocationMessage',{
             latitude:position.coords.latitude,
             longitude:position.coords.longitude
         });
     },function(err) {
+        locationButton.prop('disabled',false).text(originalText);
         alert('unable to fetch location',err);
     });
 });
