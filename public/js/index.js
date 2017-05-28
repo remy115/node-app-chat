@@ -11,8 +11,16 @@ function emitMessage(from,text) {
 function addMessage(params) {
     var from=params.from;
     var text=params.text;
+    var templateId=params.templateId || 'message-template'
+    templateId='#'+templateId;
     var formattedTime=moment(params.createdAt).format('H:mm');
-    var msgHtml=`<li>${from} [${formattedTime}]: ${text}</li>`;
+    // var msgHtml=`<li>${from} [${formattedTime}]: ${text}</li>`;
+    var template=$(templateId).html();
+    var msgHtml=Mustache.render(template,{
+        from,
+        createdAt:formattedTime,
+        text
+    });
     $('#messages-display').append(msgHtml);
 }
 
@@ -35,7 +43,7 @@ socket22.on('newLocationMessage',function(data) {
     var latitude=data.latitude;
     var longitude=data.longitude;
     var lnk=`<a href="https://www.google.com/maps?q=${latitude},${longitude}">Location</a>`;
-    addMessage({from:'Admin',text:lnk});
+    addMessage({from:'Admin',text:lnk,templateId:'location-message-template'});
 });
 
 
