@@ -28,6 +28,11 @@ io.on('connect',(socket)=>{
         io.emit('newMessage',messageGenerator(data.from,data.text));
     });
 
+    socket.on('createLocationMessage',(data)=>{
+        // io.emit('newMessage',messageGenerator('Admin',`${data.latitude}, ${data.longitude}`));
+        io.emit('newLocationMessage',{latitude:data.latitude,longitude:data.longitude});
+    });
+
 });
  
 app.use(express.static(publicPath));

@@ -29,6 +29,13 @@ socket22.on('newMessage',function(data) {
     addMessage(data);
 });
 
+socket22.on('newLocationMessage',function(data) {
+    var latitude=data.latitude;
+    var longitude=data.longitude;
+    var lnk=`<a href="https://www.google.com/maps?q=${latitude},${longitude}">Location</a>`;
+    addMessage({from:'Admin',text:lnk});
+});
+
 
 /* socket22.emit('createMessage',{
     from:'client',
@@ -42,4 +49,21 @@ $('#message-form').on('submit',function(evt) {
     evt.preventDefault();
     var msg=$('#message').val();
     emitMessage('User1',msg);
+});
+
+var locationButton=$('#send-location');
+locationButton.on('click',function(evt) {
+    if( ! navigator.geolocation) {
+        return alert('Geolocation not support by your browser!');
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+        console.log(position);
+        socket22.emit('createLocationMessage',{
+            latitude:position.coords.latitude,
+            longitude:position.coords.longitude
+        });
+    },function(err) {
+        alert('unable to fetch location',err);
+    });
 });
