@@ -42,7 +42,8 @@ socket22.on('newMessage',function(data) {
 socket22.on('newLocationMessage',function(data) {
     var latitude=data.latitude;
     var longitude=data.longitude;
-    var lnk=`<a href="https://www.google.com/maps?q=${latitude},${longitude}">Location</a>`;
+    // var lnk=`<a href="https://www.google.com/maps?q=${latitude},${longitude}">Location</a>`;
+    var lnk=`https://www.google.com/maps?q=${latitude},${longitude}`;
     addMessage({from:'Admin',text:lnk,templateId:'location-message-template'});
 });
 
