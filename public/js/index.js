@@ -1,9 +1,26 @@
 var socket22=io();
 
+function scrollToBottom() {
+    var messagesDiv=$('#messages-display');
+    var newMessage=messagesDiv.children('li:last-child');
+
+    var scrollHeight=messagesDiv.prop('scrollHeight');
+    var scrollTop=messagesDiv.prop('scrollTop');
+    var clientHeight=messagesDiv.prop('clientHeight');
+    var newMsgHeight=newMessage.innerHeight();
+    var lastMsgHeight=newMessage.prev().innerHeight();
+
+    if(scrollTop+clientHeight+newMsgHeight+lastMsgHeight >= scrollHeight) {
+        // console.log('scroll!');
+        messagesDiv.scrollTop(scrollHeight);
+    }
+
+}
+
 function emitMessage(from,text) {
     var objMsg={from,text};
     socket22.emit('createMessage',objMsg,function(data) {
-        console.log('Acknoledgment from server: ',data);
+        // console.log('Acknoledgment from server: ',data);
         $('#message').val('');
     });
 } // f1
@@ -22,6 +39,7 @@ function addMessage(params) {
         text
     });
     $('#messages-display').append(msgHtml);
+    scrollToBottom();
 }
 
 socket22.on('connect',()=>{

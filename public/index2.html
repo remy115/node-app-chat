@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Scroll test</title>
+        <style>
+            #div1 {width:600px;height:450px;border:2px solid #f80; overflow-y:scroll;}
+            #div1 p {font-size:1.1em;font-style:italic;color:#909090;padding:8px 0;margin:0;}
+        </style>
+        <script>
+            function returnHeight(elem) {
+                var ret=elem.clientHeight;
+                // var ret=elem.style.height;
+                // console.log('ret',ret);
+                return ret;
+            }
+
+            function f_scrollTop() {
+                var margins=0;
+ 
+                var div=document.getElementById('div1');
+                var clientHeight=div.clientHeight;
+                var scrollHeight=div.scrollHeight;
+                var scrollTop=div.scrollTop;
+                var newMsg=div.lastElementChild;
+                var newMsgHeight=returnHeight(newMsg);
+                var lastMsgHeight = newMsg.previousElementSibling ? returnHeight(newMsg.previousElementSibling) : (margins*-1);
+                newMsgHeight+=margins;
+                lastMsgHeight+=margins;
+
+                var totalHeight=newMsgHeight+lastMsgHeight+clientHeight+scrollTop;
+
+                var diff=totalHeight-scrollHeight;
+                console.log(`clientHeight: ${clientHeight} - scrollHeight: ##${scrollHeight}## - scrollTop: ${scrollTop} - totalHeight: ${totalHeight} --> dif: ${diff}`);
+            }
+
+            function addMsg() {
+                var msgInput=document.querySelector('#msgField');
+                var msg=msgInput.value;
+                var div=document.getElementById('div1');
+                var newMsg=document.createElement("p");
+                newMsg.innerHTML="User01:<br>"+msg;
+                div.appendChild(newMsg);
+                f_scrollTop();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="div1">
+
+        </div>
+        <input type="text" name="msgField" id="msgField" value="">
+        <button type="button" onclick="addMsg()">Add Msg</button> ---- <button type="button" onclick="f_scrollTop()">Calc scroll</button>
+    </body>
+</html>
