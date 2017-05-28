@@ -1,8 +1,9 @@
+const moment=require('moment');
 var messageGenerator=(from,text)=>{
     return {
         from,
         text,
-        createdAt:new Date().getTime()
+        createdAt:moment().valueOf()
     }
 }
 

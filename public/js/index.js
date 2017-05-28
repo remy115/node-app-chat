@@ -11,7 +11,8 @@ function emitMessage(from,text) {
 function addMessage(params) {
     var from=params.from;
     var text=params.text;
-    var msgHtml=`<li>${from}: ${text}</li>`;
+    var formattedTime=moment(params.createdAt).format('H:mm');
+    var msgHtml=`<li>${from} [${formattedTime}]: ${text}</li>`;
     $('#messages-display').append(msgHtml);
 }
 
