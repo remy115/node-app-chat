@@ -17,8 +17,11 @@ function scrollToBottom() {
 
 }
 
-function emitMessage(from,text) {
-    var objMsg={from,text};
+function emitMessage(text) {
+    if( ! text || text.length === 0) {
+        return false;
+    }
+    var objMsg={text};
     socket22.emit('createMessage',objMsg,function(data) {
         // console.log('Acknoledgment from server: ',data);
         $('#message').val('');
@@ -44,7 +47,27 @@ function addMessage(params) {
 
 socket22.on('connect',()=>{
     console.log('Connected to the server!');
+    var params=$.deparam();
+    // console.log('params',params);
+    socket22.emit('join',params,function(err) {
+        if(err) {
+            alert(err);
+            window.location.href="/";
+        } else {
+            console.log('No error!');
+        }
+    });
     // f1();
+});
+
+socket22.on('updateUserList',function(users){
+    var usersList=$('#users');
+    var $users=$('<ol />');
+    users.forEach((elem)=>{
+        $users.append($('<li />').text(elem));
+    });
+    usersList.html($users);
+    console.log('users list',users,'$users:',$users);
 });
 
 
@@ -58,11 +81,12 @@ socket22.on('newMessage',function(data) {
 });
 
 socket22.on('newLocationMessage',function(data) {
+    var from=data.from;
     var latitude=data.latitude;
     var longitude=data.longitude;
     // var lnk=`<a href="https://www.google.com/maps?q=${latitude},${longitude}">Location</a>`;
     var lnk=`https://www.google.com/maps?q=${latitude},${longitude}`;
-    addMessage({from:'Admin',text:lnk,templateId:'location-message-template'});
+    addMessage({from,text:lnk,templateId:'location-message-template'});
 });
 
 
@@ -77,7 +101,7 @@ socket22.on('newLocationMessage',function(data) {
 $('#message-form').on('submit',function(evt) {
     evt.preventDefault();
     var msg=$('#message').val();
-    emitMessage('User1',msg);
+    emitMessage(msg);
 });
 
 var locationButton=$('#send-location');
